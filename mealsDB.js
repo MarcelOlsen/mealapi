@@ -28,20 +28,6 @@ export class MealsDB {
     return this.meals;
   }
 
-  getMealById(id) {
-    return this.meals.find((meal) => meal.id === id);
-  }
-
-  updateMeal(id, updatedMeal) {
-    const index = this.meals.findIndex((meal) => meal.id === id);
-    if (index !== -1) {
-      this.meals[index] = { ...this.meals[index], ...updatedMeal };
-      this.writeMeals();
-      return true;
-    }
-    return false;
-  }
-
   deleteMeal(id) {
     const index = this.meals.findIndex((meal) => meal.id === id);
     if (index !== -1) {

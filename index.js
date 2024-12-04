@@ -8,9 +8,8 @@ const app = express();
 const db = new MealsDB();
 
 app.get("/meals/search/:name", async (req, res) => {
-  const { name } = req.params;
-
   try {
+    const { name } = req.params;
     const response = await fetch(`${BASE_URL}/search.php?s=${name}`);
     const data = await response.json();
 
@@ -27,8 +26,6 @@ app.get("/meals/random", async (req, res) => {
   try {
     const response = await fetch(`${BASE_URL}/random.php`);
     const data = await response.json();
-
-    console.log(response);
 
     res.json({ success: "ok", meal: data.meals });
   } catch (error) {
@@ -59,14 +56,18 @@ app.get("/meals/favorite", async (req, res) => {
   }
 });
 
-app.post("/meals/favorite/:id", async (req, res) => {
+app.post("/meals/favorite/:name", async (req, res) => {
   try {
-    const { id } = req.params;
-    const meal = await fetch(`${BASE_URL}/lookup.php?i=${id}`);
+    const { name } = req.params;
+    const meal = await fetch(`${BASE_URL}/search.php?s=${name}`);
     const data = await meal.json();
 
     db.addMeal(data.meals[0].idMeal);
-    res.json({ success: "ok", message: "Meal added to favorites." });
+    res.json({
+      success: "ok",
+      message: "Meal added to favorites.",
+      meal: data.meals[0],
+    });
   } catch (error) {
     console.error("Error while adding meal to favorites:", error);
     res
